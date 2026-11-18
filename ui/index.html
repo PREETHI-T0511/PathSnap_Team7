@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PathSnap Evaluator</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">PESU · PathSnap</p>
+        <h1>Route reconstruction</h1>
+        <p class="subtitle">Choose an evaluator trip to run the server-side model and view its reconstructed route.</p>
+      </div>
+      <div id="connection" class="connection" role="status">Disconnected</div>
+    </header>
+
+    <section class="panel controls" aria-label="Trip controls">
+      <label class="api-label" for="apiBase">Model laptop API address</label>
+      <div class="row">
+        <input id="apiBase" type="url" spellcheck="false" placeholder="http://192.168.1.25:8000" value="http://127.0.0.1:8000">
+        <button id="connectBtn" class="button secondary">Connect</button>
+      </div>
+      <div class="row trip-row">
+        <label class="trip-label" for="tripSelect">Evaluator trip</label>
+        <select id="tripSelect" disabled><option value="">Connect to load trips</option></select>
+        <button id="predictBtn" class="button" disabled>Reconstruct route</button>
+      </div>
+      <p id="status" class="status" role="status">Connect to the API running on the model laptop.</p>
+    </section>
+
+    <section id="results" class="results hidden" aria-live="polite">
+      <div class="metrics">
+        <article class="metric"><span>Top-1 accuracy</span><strong id="accuracy">—</strong><small id="scored">Waiting for prediction</small></article>
+        <article class="metric"><span>Candidate miss rate</span><strong id="missRate">—</strong><small>Reference road absent from candidates</small></article>
+        <article class="metric"><span>Route continuity</span><strong id="continuity">—</strong><small>Consecutive segments connect</small></article>
+        <article class="metric"><span>Inference time</span><strong id="inference">—</strong><small>Model and decoder</small></article>
+      </div>
+      <div class="panel map-panel">
+        <div class="map-heading">
+          <div><p class="eyebrow">Predicted trip</p><h2 id="mapTitle">Route view</h2></div>
+          <div class="legend"><span><i class="gps-dot"></i>GPS observations</span><span><i class="route-line"></i>Predicted road path</span></div>
+        </div>
+        <div class="map-frame"><svg id="routeMap" viewBox="0 0 900 460" role="img" aria-label="GPS observations and predicted road route"></svg></div>
+        <p id="mapNote" class="map-note">Reference labels stay on the server; the map shows GPS observations and the model's decoded prediction.</p>
+      </div>
+      <p id="predictionCount" class="footnote"></p>
+    </section>
+
+    <footer>Ground-truth route labels are kept on the API server. This interface receives the prediction and aggregate evaluation metrics only.</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
